@@ -1,0 +1,28 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+   tags:
+     - ".*v"
+
+jobs:
+  build-and-push:
+   runs-on: ubuntu-latest
+
+   permissions:
+    contents: read
+    packages: write
+
+   steps:
+     # リポジトリの内容をチェックアウト
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+     # ghcrにログイン
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        # actorとrepository_ownerの使い分けは？
+        username: ${{  github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
